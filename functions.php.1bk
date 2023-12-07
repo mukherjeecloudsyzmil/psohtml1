@@ -1,0 +1,41 @@
+<?php
+include 'functions.php';
+
+$pdo = pdo_connect_mysql();
+
+// Check if the delete button for closed tickets is clicked
+if (isset($_POST['delete_closed'])) {
+    try {
+        // Delete tickets that have a status of 'closed'
+        $stmt = $pdo->prepare('DELETE FROM tickets WHERE status = ?');
+        $status = 'closed';
+        $stmt->execute([$status]);
+
+        // Optionally, you might want to delete associated comments for the deleted tickets
+        $stmtComments = $pdo->prepare('DELETE FROM tickets_comments WHERE ticket_id NOT IN (SELECT id FROM tickets)');
+        $stmtComments->execute();
+
+        // Redirect to the current page after deletion
+        header('Location: '.$_SERVER['PHP_SELF']);
+        exit;
+    } catch (PDOException $e) {
+        // Handle exception (e.g., log error, display error message)
+        error_log('Failed to delete closed tickets: ' . $e->getMessage());
+        // Display error message or handle the error as needed
+    }
+}
+?>
+
+<?=template_header('Tickets')?>
+
+<div class="content home">
+    <h2>Tickets</h2>
+    <!-- Display tickets here -->
+
+    <!-- Button to delete closed tickets -->
+    <form method="post">
+        <input type="submit" name="delete_closed" value="Delete Closed Tickets">
+    </form>
+</div>
+
+<?=template_footer()?>
