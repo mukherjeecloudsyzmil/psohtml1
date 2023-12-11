@@ -14,7 +14,7 @@ $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 	<h2>Tickets</h2>
 
-	<p>Welcome to the main2 page. You can view the list of tickets below.</p>
+	<p>Welcome to the main2444 page. You can view the list of tickets below.</p>
 
 	<div class="btns">
 		<a href="create.php" class="btn">Create Ticket</a>
